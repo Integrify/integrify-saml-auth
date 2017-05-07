@@ -91,9 +91,17 @@ app.post('/:appkey/login/callback', function(req, res, next) {
                 var redirectrUrlObj = url.parse(destinationUrl);
                 delete redirectrUrlObj.search;
                 if (!redirectrUrlObj.query) redirectrUrlObj.query = {};
-                redirectrUrlObj.query.token_type = "bearer";
-                redirectrUrlObj.query.token = tok.token;
+
+                if (!config.integrify.useCookieToken){
+                    redirectrUrlObj.query.token_type = "bearer";
+                    redirectrUrlObj.query.token = tok.token;
+                } else {
+                    res.cookie('iapi_token', 'access&'+ querystring.stringify(tok.token));
+                    res.clearCookie("integrifyUrl");
+                }
+
                 var redirectUrl = url.format(redirectrUrlObj);
+
                 return res.redirect(redirectUrl);
             } else {
                 return res.status(500).send("Your login took too long to process");

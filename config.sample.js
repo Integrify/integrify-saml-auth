@@ -9,6 +9,7 @@ var config = {
             cert: "idp-openid.crt"
         },
         integrify: {
+            "useCookieToken":false,
             "service_user" : "iApprove", // and account in integrify with permissions to create and update users
             "integrify_base_url" : "https://integrify.yourdomain.com", //the url of your Integrify site
             "consumer_key": "myapikey", //your API key  (consumer_key) see https://developer.integrify.com/external-auth/activation
