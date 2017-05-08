@@ -19,16 +19,7 @@ var Samls = function samls() {
             if (thisConfig.samlStrategy.cert) {
                 try {
                     thisConfig.samlStrategy.cert = fs.readFileSync(path.join(__dirname, thisConfig.samlStrategy.cert), 'utf-8')
-                    var samlStrat = new SamlStrategy(
-                        thisConfig.samlStrategy,
-                        function (profile, done) {
 
-                            return done(null, profile);
-
-                        });
-                    samlStrat.name = 'saml-' + appkey;
-
-                    me.passport.use(samlStrat);
 
 
                 }
@@ -37,6 +28,16 @@ var Samls = function samls() {
                 }
 
             }
+            var samlStrat = new SamlStrategy(
+                thisConfig.samlStrategy,
+                function (profile, done) {
+
+                    return done(null, profile);
+
+                });
+            samlStrat.name = 'saml-' + appkey;
+
+            me.passport.use(samlStrat);
 
         };
         R.forEach(loadStrategy, R.keys(config));

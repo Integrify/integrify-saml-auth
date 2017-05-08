@@ -97,7 +97,10 @@ app.post('/:appkey/login/callback', function(req, res, next) {
                     redirectrUrlObj.query.token_type = "bearer";
                     redirectrUrlObj.query.token = tok.token;
                 } else {
-                    res.cookie('iapi_token', 'access&'+ querystring.stringify(tok.token));
+                    var accessToken = {};
+                    accessToken.oauth_token = tok.token.replace(/-/g, "");
+                    accessToken.oauth_token_secret = '00000';
+                    res.cookie('iapi_token', 'access&'+ querystring.stringify(accessToken));
                     res.clearCookie("integrifyUrl");
                 }
 
