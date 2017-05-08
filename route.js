@@ -12,6 +12,7 @@ var integrifyAuth = require("./integrify-auth")
 var url = require("url")
 var cookieParser = require("cookie-parser")
 var R  = require("ramda")
+var querystring = require("querystring")
 
 app.use(morgan('dev'));
 
