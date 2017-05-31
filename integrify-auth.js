@@ -67,6 +67,7 @@ integrifyAuth.loginSaml = function loginSaml(user, instanceAuthConf, callback) {
             }
 
             if (thisUser.DeletedDateF) {
+                logger.error("User access denied. " + thisUser.UserName + " account has been deactivated:", 'integrify-saml')
                 return callback('User account has been deactivated');
             }
             thisUser.IsActive = true;
