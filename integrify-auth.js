@@ -96,13 +96,13 @@ integrifyAuth.loginSaml = function loginSaml(user, instanceAuthConf, callback) {
                 //options = {key: instanceAuthConf.consumer_key,secret:instanceAuthConf.consumer_secret,"url":instanceAuthConf.integrify_base_url, username:thisUser.UserName, expiresInMinutes:20}
                 //integrifyToken.getTokenFromJWT(options, function(err,tokenObj){
 
-                if (instanceAuthConf.tokenExpiresInMinutes) {
-
-                    var d = new Date();
-                    d.setMinutes(d.getMinutes() + instanceAuthConf.tokenExpiresInMinutes);
-
-                   imepersonateURL = imepersonateURL + "&expires=" +  (d.getTime()/1000.00);
-                }
+                // if (instanceAuthConf.tokenExpiresInMinutes) {
+                //
+                //     var d = new Date();
+                //     d.setMinutes(d.getMinutes() + instanceAuthConf.tokenExpiresInMinutes);
+                //
+                //    imepersonateURL = imepersonateURL + "&expires=" +  (d.getTime()/1000.00);
+                // }
                 request(imepersonateURL, function (err, resp, tokenObj) {
                     if (!err) {
 
