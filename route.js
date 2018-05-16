@@ -85,8 +85,9 @@ app.post('/:appkey/login/callback', function(req, res, next) {
             if (err) {
                 return res.status(500).send(err);
             }
+            var exp = 600 * 1000;
             var destinationUrl = req.cookies.integrifyUrl;
-
+            res.clearCookie('integrifyUrl', {maxAge: exp});
             if (destinationUrl) {
 
                 var redirectrUrlObj = url.parse(destinationUrl);
@@ -101,7 +102,7 @@ app.post('/:appkey/login/callback', function(req, res, next) {
                     accessToken.oauth_token = tok.token.replace(/-/g, "");
                     accessToken.oauth_token_secret = '00000';
                     res.cookie('iapi_token', 'access&'+ querystring.stringify(accessToken));
-                    res.clearCookie("integrifyUrl");
+
                 }
 
                 var redirectUrl = url.format(redirectrUrlObj);
