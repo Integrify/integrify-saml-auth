@@ -13,7 +13,8 @@ var url = require("url")
 var cookieParser = require("cookie-parser")
 var R  = require("ramda")
 var querystring = require("querystring")
-
+const browser = require('browser-detect');
+const config = require("./config.js")
 app.use(morgan('dev'));
 
 var logger;
@@ -50,6 +51,23 @@ app.get('/:appkey/metadata', function (req, res) {
 app.get("/:appkey/", function(req,res){
     var exp = 600 * 1000;
     var integrifyUrl = req.query.r || req.query.redirect;
+    const isMobile = browser(req.headers['user-agent']).mobile;
+    let destUrl = config[req.params.appkey].integrify.integrify_base_url
+    if (isMobile) {
+        res.cookie('integrify-view-preference', 'mobile')
+        if (integrifyUrl.indexOf('task_sid') !== -1) {
+            var taskSID = integrifyUrl.split('task_sid=')[1];
+            destUrl += '/m/#/task-detail/' + taskSID;
+        } else if (integrifyUrl.indexOf('request_sid') !== -1) {
+            var requestSID = integrifyUrl.split('request_sid=')[1];
+            destUrl += '/m/#/request-detail/' + requestSID;
+        } // KME, so new Request works
+        else if (integrifyUrl.indexOf('newrequest') !== -1) {
+            var processSID = integrifyUrl.split('newrequest=')[1];
+            destUrl += '/m/#/request-start/process=' + processSID;
+        }
+        integrifyUrl = destUrl
+    }
     res.cookie('integrifyUrl', integrifyUrl, {maxAge: exp});
 
     res.redirect("/samlauth/" + req.params.appkey + "/login")
@@ -71,6 +89,8 @@ app.get('/:appkey/login', function(req, res, next) {
 app.post('/:appkey/login/callback', function(req, res, next) {
     samls.passport.authenticate('saml-' + req.params.appkey, function(err, user, info) {
 
+        const browserResult = browser(req.headers['user-agent']);
+
         var config = samls.config[req.params.appkey];
         if (err) {
             logger.error("Error extracting user from saml assertion:", err, 'integrify-saml')
@@ -85,7 +105,9 @@ app.post('/:appkey/login/callback', function(req, res, next) {
             if (err) {
                 return res.status(500).send(err);
             }
+            var exp = 600 * 1000;
             var destinationUrl = req.cookies.integrifyUrl;
+            res.clearCookie('integrifyUrl', {maxAge: exp});
 
             if (destinationUrl) {
 
@@ -101,7 +123,7 @@ app.post('/:appkey/login/callback', function(req, res, next) {
                     accessToken.oauth_token = tok.token.replace(/-/g, "");
                     accessToken.oauth_token_secret = '00000';
                     res.cookie('iapi_token', 'access&'+ querystring.stringify(accessToken));
-                    res.clearCookie("integrifyUrl");
+
                 }
 
                 var redirectUrl = url.format(redirectrUrlObj);
