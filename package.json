@@ -1,5 +1,5 @@
 {
-  "name": "integrify-saml-adfs",
+  "name": "integrify-saml-auth",
   "version": "1.1.0",
   "description": "",
   "main": "index.js",
