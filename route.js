@@ -93,8 +93,8 @@ app.post('/:appkey/login/callback', function(req, res, next) {
                 var redirectrUrlObj = url.parse(destinationUrl);
                 delete redirectrUrlObj.search;
                 if (!redirectrUrlObj.query) redirectrUrlObj.query = {};
-
-                if (!config.integrify.useCookieToken){
+                //querystring token only works in v6
+                if (config.integrify.useQueryStringSToken){
                     redirectrUrlObj.query.token_type = "bearer";
                     redirectrUrlObj.query.token = tok.token;
                 } else {
