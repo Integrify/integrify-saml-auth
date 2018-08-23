@@ -2,7 +2,7 @@ var request = require("request");
 var integrifyToken = require("integrify-access-token");
 var url = require("url")
 var R = require("ramda")
-
+var querystring = require("querystring")
 var logger;
 try {
      logger = require('integrify-require')('integrify-logger');
@@ -33,14 +33,19 @@ integrifyAuth.loginSaml = function loginSaml(user, instanceAuthConf, callback) {
         }
         //create an object for oauth header
         tokenObj = JSON.parse(tokenObj);
+        tokenObj.key = instanceAuthConf.consumer_key;
+        tokenObj.token = tokenObj.access_token;
+        tokenObj.sso = true;
 
         //check to see is user exists
         var userUrl = url.resolve(instanceAuthConf.integrify_base_url, "users?username=" + user[keyMap["UserName"]]);
 
         logger.info("Checking user in Integrify DB", "integrify-saml");
+
+        let tempOAuthHeader =  {Oauth: querystring.stringify(tokenObj)};
         request.get({
             url: userUrl,
-            headers: {Authorization: "Bearer " + tokenObj.access_token}
+            headers: tempOAuthHeader
         }, function (err, resp, users) {
             if (err) return callback(err);
             users = JSON.parse(users);
@@ -80,7 +85,7 @@ integrifyAuth.loginSaml = function loginSaml(user, instanceAuthConf, callback) {
                 method: reqMethod,
                 url: saveUserUrl,
                 json: thisUser,
-                headers: {Authorization: "Bearer " + tokenObj.access_token}
+                headers: tempOAuthHeader
             }, function (err, resp, save) {
                 if (err) {
                     logger.error("Error saving user", err, "integrify-saml");
