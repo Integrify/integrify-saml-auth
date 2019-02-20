@@ -18,7 +18,7 @@ If Integrify is running on port 80 or por 443, remove the -yourport section from
 
 ### Mapping your SAML Attributes to Integrify profile fields:
 
-Locate the section of your config.js file for teh fieldMap. It will look something like this by default:
+Locate the section of your config.js file for the fieldMap. It will look something like this by default:
 
     "fieldMap": {
                 "NameFirst": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
