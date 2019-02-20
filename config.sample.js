@@ -14,7 +14,8 @@ var config = {
             "integrify_base_url" : "https://integrify.yourdomain.com", //the url of your Integrify site
             "consumer_key": "myapikey", //your API key  (consumer_key) see https://developer.integrify.com/external-auth/activation
             "consumer_secret": "myapisecret", //your API secret (consumer_secret)
-            "tokenExpiresInMinutes" : 60, //number of minutes the loging seeiosn is valid 
+            "use_secure_cookie": false, //set to true if all of your Integrify servers are running under https and any load balancer in use supports and is configured for this
+            "tokenExpiresInMinutes" : 60, //number of minutes the loging seeiosn is valid
             "fieldMap" : {  // a mapping of Integrify profile fields to fields returned in the SAML.
                 "NameFirst": "givenName",
                 "NameLast" : "sn",
