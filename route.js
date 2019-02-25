@@ -102,7 +102,8 @@ app.post('/:appkey/login/callback', function(req, res, next) {
                     accessToken.oauth_token = tok.token.replace(/-/g, "");
                     accessToken.oauth_token_secret = '00000';
                     res.cookie('iapi_token', 'access&'+ querystring.stringify(accessToken), {
-                        secure: config.integrify.use_secure_cookie
+                        secure: config.integrify.use_secure_cookie,
+                        httpOnly: config.use_http_only_cookie
                     });
 
                 }
