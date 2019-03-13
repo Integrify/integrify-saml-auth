@@ -55,7 +55,7 @@ Here is a full list of available profile fields than may be mapped:
                     "Phone": "yourSamlAttribute...",                      
                     "Title": "yourSamlAttribute...",              
                     "Custom1": "yourSamlAttribute...", 
-                    "Custom1": "yourSamlAttribute...", 
+                    "Custom2": "yourSamlAttribute...", 
 
                     
     
