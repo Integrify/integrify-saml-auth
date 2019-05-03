@@ -1,8 +1,7 @@
 -
  url: https://integrify.mydomain.com/samlauth/myapikey #for version 6.x use the following format url: https://integrify.mydomain.com/samlauth/myapikey/?token={token}&redirect={redirect}
  get_type: redirect
- logout: http://www.integrify.com
+ logout: https://integrify.mydomain.com/samlauth/myapikey/logout
 -
- 
 
-      
+
