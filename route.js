@@ -67,8 +67,21 @@ app.get('/:appkey/login', function(req, res, next) {
     })(req, res, next);
 });
 
+app.get('/:appkey/logout', function(req, res) {
+    res.clearCookie('iapi_token');
+    var config = samls.config[req.params.appkey];
+    const samlStrategy = samls.passport._strategies["saml-" + req.params.appkey];
+    req.user = {nameIDFormat: config.samlStrategy.identifierFormat, nameID: req.cookies.NameID};
+    samlStrategy.logout(req, function(err, redirectUrl) {
+        if (err) { return next(err); }
+        if (!redirectUrl) { return res.status(500).send(err); }
+
+        res.redirect(redirectUrl)
+    });
+});
 
 app.post('/:appkey/login/callback', function(req, res, next) {
+
     samls.passport.authenticate('saml-' + req.params.appkey, function(err, user, info) {
 
         var config = samls.config[req.params.appkey];
@@ -102,6 +115,10 @@ app.post('/:appkey/login/callback', function(req, res, next) {
                     accessToken.oauth_token = tok.token.replace(/-/g, "");
                     accessToken.oauth_token_secret = '00000';
                     res.cookie('iapi_token', 'access&'+ querystring.stringify(accessToken), {
+                        secure: config.integrify.use_secure_cookie,
+                        httpOnly: config.use_http_only_cookie
+                    });
+                    res.cookie('NameID', user[config.integrify.fieldMap["UserName"]], {
                         secure: config.integrify.use_secure_cookie,
                         httpOnly: config.use_http_only_cookie
                     });
