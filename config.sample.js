@@ -6,7 +6,10 @@ var config = {
             "entryPoint": "https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php", //the url for initiating a SAML Authn request at your IDP
             "issuer": "IntegrifySAMLTest", //a unique ID typically provided by your IDP
             "protocol": "https://", // http or https
-            cert: "idp-openid.crt"
+            cert: "idp-openid.crt",
+            //callbackUrl: "http://localhost:3001/samlauth/integrifyinstance/login/callback",
+            //zforceAuthn: false,
+            logoutUrl: "http://localhost:8080/simplesaml/saml2/idp/SingleLogoutService.php"
         },
         integrify: {
             "useCookieToken":true,
