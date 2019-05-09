@@ -2,13 +2,18 @@ var config = {
     myapikey: {
         samlStrategy: {
 
-            "path": "/myapikey/samlcallback", //this will be appended to the full URL that the IDP muts post back to http://yourinstance/samlauth/yourAPIKey/samlcallback
-            "entryPoint": "https://openidp.feide.no/simplesaml/saml2/idp/SSOService.php", //the url for initiating a SAML Authn request at your IDP
-            "issuer": "IntegrifySAMLTest", //a unique ID typically provided by your IDP
-            "protocol": "https://", // http or https
-            cert: "idp-openid.crt",
-            //callbackUrl: "http://localhost:3001/samlauth/integrifyinstance/login/callback",
-            //zforceAuthn: false,
+            entryPoint: 'http://localhost:8080/simplesaml/saml2/idp/SSOService.php',
+            issuer: "integrify-saml-client",
+            protocol: "http://",
+            cert: "idp.crt",
+            privateCert: "integrify.pem",
+            acceptedClockSkewMs: -1,
+            // authnContext: 'urn:oasis:names:tc:SAML:2.0:ac:classes:Password<',
+            identifierFormat: "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
+            signatureAlgorithm: 'sha256',
+            loggerType: "dev",
+            callbackUrl: "http://localhost:3001/samlauth/integrifyinstance/login/callback",
+            forceAuthn: false,
             logoutUrl: "http://localhost:8080/simplesaml/saml2/idp/SingleLogoutService.php"
         },
         integrify: {
