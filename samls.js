@@ -28,6 +28,18 @@ var Samls = function samls() {
                 }
 
             }
+            if (thisConfig.samlStrategy.privateCert) {
+                try {
+                    thisConfig.samlStrategy.privateCert = fs.readFileSync(path.join(__dirname, thisConfig.samlStrategy.privateCert), 'utf-8')
+
+
+
+                }
+                catch (e) {
+                    console.error(e)
+                }
+
+            }
             var samlStrat = new SamlStrategy(
                 thisConfig.samlStrategy,
                 function (profile, done) {
