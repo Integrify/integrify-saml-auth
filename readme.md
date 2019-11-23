@@ -1,6 +1,37 @@
-## The folder can be installed into an Integrify instance and configured to allow SSO integration via SAML 2.0
+### Introduction
+This accessory code can be installed into an Integrify instance and configured to allow SSO integration via SAML 2.0 with almost any identity provider (ADFS, OKTA, ping...).  This is a will create a service initiated (your intergify site needs to be auth initiator) implementation with auto provisioning of authenticated users.
 
-### To configure:
+_NOTE: Active directory group membership, group provisioning, and manager sync are not within the scope of this client's implementation._
+
+### What do I need?
+You will need the following items in order to properly install and configure this SAML 2.0 client into your Integrify installation:
+
+* Administrative access to you Integrify application server
+* Ability to run sql scripts against the Integrify consumers tables in the DB
+* Your identity provider's signing certificate in base64 format (to verify the SAML asertion when recieved)
+* 
+
+
+### Installation
+1.  Select the proper branch in the branch selector on the left:
+    * master for Integrify version 7
+    * master-6 for Integrify version 6
+   
+2.  Click the green ***Clone or Download*** button toward the upper-right and then click ***Download ZIP*** from the displayed window.
+
+3.  On your Integrify application server, create a folder named **\_custom** in the **\integrify\app\webserver\app\\** directory if it does not already exist.
+
+4.  Move the downloaded zip file to the **\integrify\app\webserver\app\_custom\\** folder and unzip it.
+
+5.  Open an administrative command prompt on the server, and ***cd*** (change directory) to the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory
+
+6.  Run the following command: `npm install`
+
+7.  Copy the **samlauth.yml** file from the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory to the **\integrify\app\webserver\app\data\routes\\** directory
+
+### Configuration
+
+To configure:
 
 * Download and unzip this folder. Save it under webserver/app/_custom in your Integrify installation.
 * from a command prompt in this folder run the command "npm install"
