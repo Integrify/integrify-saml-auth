@@ -9,7 +9,6 @@ You will need the following items in order to properly install and configure thi
 * Administrative access to you Integrify application server
 * Ability to run sql scripts against the Integrify consumers tables in the DB
 * Your identity provider's signing certificate in base64 format (to verify the SAML asertion when recieved)
-* 
 
 
 ### Installation
@@ -29,23 +28,39 @@ You will need the following items in order to properly install and configure thi
 
 7.  Copy the **samlauth.yml** file from the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory to the **\integrify\app\webserver\app\data\routes\\** directory
 
-### Configuration
+8.  Copy the **auth-config-yourhost-yourport.yml** file from the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory to the **\integrify\app\webserver\\** directory
 
-To configure:
 
-* Download and unzip this folder. Save it under webserver/app/_custom in your Integrify installation.
-* from a command prompt in this folder run the command "npm install"
-* Obtain signing certificate in base64 format if required to verify the SAML asertion sent from your IDP and copy it to this folder
-* Copy the config.saml.js, config-adfs.js or config-openid.js (example configs) file to a file named config.js in this folder
-* Edit config.js based on the requirements specified by your IDP and your Integrify instance settings. Note, you will need a Consumer_Key with API access with Impersonation enabled. See your OAUTH_CONSUMERS table.
-* Copy the samlauth.yml file to  /webserver/app/data/routes
-* Copy the auth-config-yourhost-yourport.yml file to the root /webserver. Edit the contents of this file and replace myapikey in the iurl property to a valid API key for your instance.
-Rename the file replacing yourhost with the host name of the Integrify server. If running on a port other than 80 or 443, replace -yourport with the port the Integrify server is listening on.
-If Integrify is running on port 80 or por 443, remove the -yourport section from the file name.
-* restart your Integrify isntance
-* browse to http(s)://{integrify server}/samlauth/{app_key}/status to verify that the module has loaded
-* browse to http(s)://{integrify server}/samlauth/{app_key}/metadata to get the XML metadata that describes this service including the Assertion Consumer Service URL and Identifier
+### Configuration (for commmunication with your Integrify environment)
 
+1.  Create a new API key for integration purposes following the istrauction on the [Integrify developer activation page](https://developer.integrify.com/rest/activation).  You can find your **LicenseID** in the Integrify Application at _System Settings > System Config > ID_ or within the Integrify OnPremise Manager under your application name (normally **Integrify**) and _Edit instance Settings_.
+
+2.  Copy your identity provider's signing certificate in base64 format to the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory
+
+3.  In the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory, choose the example config file that is most similar to the IDP you will be integrating with, and copy either the config.saml.js, config-adfs.js or config-openid.js (example configs) into the same folder.
+
+4.  Rename the copied file to **config.js**.  
+
+5.  Edit config.js based on the requirements specified by your IDP and your Integrify instance settings. 
+    *  Replace **myapikey** with the key you created in step 1 on line 2 and in the **callbackURL** and/or **path** settings in the _samlStrategy_ section
+    *  Configure **callbackURL** and/or **path** to reflect the proper base url of your integrify installation
+    *  Configure the **cert** parameter to reflect the file name of the identity provider's signing certificate in base64 format
+    *  Configure the **consumer_key**, and **consumer_secret** parameters in the _integrify_ section to the API key generated in step 1
+    *  Configure **integrify_base_url** in the _integrify_ section to reflect the proper base url of your Integrify installation  
+    
+6.  Edit the contents of the **auth-config-yourhost-yourport.yml** file in the **\integrify\app\webserver\\** directory replacing **myapikey** and the base url in _url_  and _logout_ properties to match your Integrify instance.
+
+7.  Rename the  **auth-config-yourhost-yourport.yml** file, replacing **yourhost** with the base url of the Integrify instance. If Integrify is running on a port other than 80 or 443, replace **yourport** with the port the Integrify application is listening on. If Integrify is running on port 80 or por 443, remove **-yourport** from the file name. Add **.disabled** after **.yml** in the filename to temporarily disable it's use.
+
+8.  Restart your Integrify instance using the Integrify OnPremise Manager.
+
+At this point, the SAML client is in a pre-configured state where it should be up and communicating properly with the Integrify side of things, but not actually enabled.  Use the links in the next two steps to verify.
+
+9.  Point your browser to **http(s)://{your integrify base url}/samlauth/{myapikey}/status** to verify that the module has loaded
+
+10. Point your browser to **http(s)://{your integrify base url}/samlauth/{myapikey}/metadata** to get the XML metadata that describes this service including the Assertion Consumer Service URL and Identifier.  Note that this link does not currently provide enough information to use for _import_ on the IDP side.
+
+* To enable use of the SAML client, remove the **.disabled** from the end of the **auth-config-yourhost-yourport.yml.disabled** filename in the **\integrify\app\webserver\\** directory.
 
 ### Mapping your SAML Attributes to Integrify profile fields:
 
