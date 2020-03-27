@@ -22,7 +22,7 @@ You will need the following items in order to properly install and configure thi
 
 4.  Move the downloaded zip file to the **\integrify\app\webserver\app\_custom\\** folder and unzip it.
 
-5.  Open an administrative command prompt on the server, and ***cd*** (change directory) to the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory
+5.  Open an administrative command prompt on the server, and ***cd*** (change directory) to the **\integrify\app\webserver\app\\_custom\integrify-saml-auth-master\\** directory
 
 6.  Run the following command: `npm install`
 
@@ -35,9 +35,9 @@ You will need the following items in order to properly install and configure thi
 
 1.  Create a new API key for integration purposes following the istrauction on the [Integrify developer activation page](https://developer.integrify.com/rest/activation).  You can find your **LicenseID** in the Integrify Application at _System Settings > System Config > ID_ or within the Integrify OnPremise Manager under your application name (normally **Integrify**) and _Edit instance Settings_.
 
-2.  Copy your identity provider's signing certificate in base64 format to the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory
+2.  Copy your identity provider's signing certificate in base64 format to the **\integrify\app\webserver\app\\_custom\integrify-saml-auth-master\\** directory
 
-3.  In the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory, choose the example config file that is most similar to the IDP you will be integrating with, and copy either the config.saml.js, config-adfs.js or config-openid.js (example configs) into the same folder.
+3.  In the **\integrify\app\webserver\app\\_custom\integrify-saml-auth-master\\** directory, choose the example config file that is most similar to the IDP you will be integrating with, and copy either the config.saml.js, config-adfs.js or config-openid.js (example configs) into the same folder.
 
 4.  Rename the copied file to **config.js**.  
 
