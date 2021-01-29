@@ -1,14 +1,14 @@
 ### Introduction
-This accessory code can be installed into an Integrify instance and configured to allow SSO integration via SAML 2.0 with almost any identity provider (ADFS, OKTA, ping...).  This is a will create a service initiated (your intergify site needs to be auth initiator) implementation with auto provisioning of authenticated users.
+This accessory code can be installed into an Integrify instance and configured to allow SSO integration via SAML 2.0 with almost any identity provider (ADFS, OKTA, ping...).  This will create a service initiated (your intergify site needs to be auth initiator) implementation with auto provisioning of authenticated users.
 
 _NOTE: Active directory group membership, group provisioning, and manager sync are not within the scope of this client's implementation._
 
 ### What do I need?
 You will need the following items in order to properly install and configure this SAML 2.0 client into your Integrify installation:
 
-* Administrative access to you Integrify application server
+* Administrative access to your Integrify application server
 * Ability to run sql scripts against the Integrify consumers tables in the DB
-* Your identity provider's signing certificate in base64 format (to verify the SAML asertion when recieved)
+* Your identity provider's signing certificate in base64 format (to verify the SAML asertion when received)
 
 
 ### Installation
@@ -20,20 +20,20 @@ You will need the following items in order to properly install and configure thi
 
 3.  On your Integrify application server, create a folder named **\_custom** in the **\integrify\app\webserver\app\\** directory if it does not already exist.
 
-4.  Move the downloaded zip file to the **\integrify\app\webserver\app\_custom\\** folder and unzip it.
+4.  Move the downloaded zip file to the **\integrify\app\webserver\app\\_custom\\** folder and unzip it.
 
 5.  Open an administrative command prompt on the server, and ***cd*** (change directory) to the **\integrify\app\webserver\app\\_custom\integrify-saml-auth-master\\** directory
 
 6.  Run the following command: `npm install`
 
-7.  Copy the **samlauth.yml** file from the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory to the **\integrify\app\webserver\app\data\routes\\** directory
+7.  Copy the **samlauth.yml** file from the **\integrify\app\webserver\app\\_custom\integrify\saml-auth-master\\** directory to the **\integrify\app\webserver\app\data\routes\\** directory
 
-8.  Copy the **auth-config-yourhost-yourport.yml** file from the **\integrify\app\webserver\app\_custom\integrify\saml-auth-master\\** directory to the **\integrify\app\webserver\\** directory
+8.  Copy the **auth-config-yourhost-yourport.yml** file from the **\integrify\app\webserver\app\\_custom\integrify\saml-auth-master\\** directory to the **\integrify\app\webserver\\** directory
 
 
 ### Configuration (for commmunication with your Integrify environment)
 
-1.  Create a new API key for integration purposes following the istrauction on the [Integrify developer activation page](https://developer.integrify.com/rest/activation).  You can find your **LicenseID** in the Integrify Application at _System Settings > System Config > ID_ or within the Integrify OnPremise Manager under your application name (normally **Integrify**) and _Edit instance Settings_.
+1.  Create a new API key for integration purposes following the instructions on the [Integrify developer activation page](https://developer.integrify.com/rest/activation).  You can find your **LicenseID** in the Integrify Application at _System Settings > System Config > ID_ or within the Integrify OnPremise Manager under your application name (normally **Integrify**) and _Edit Instance Settings_.
 
 2.  Copy your identity provider's signing certificate in base64 format to the **\integrify\app\webserver\app\\_custom\integrify-saml-auth-master\\** directory
 
