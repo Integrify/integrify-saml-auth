@@ -5,8 +5,8 @@ var R = require("ramda")
 var querystring = require("querystring")
 var logger;
 try {
-     logger = require('integrify-require')('integrify-logger');
-} catch(e) {
+    logger = require('integrify-require')('integrify-logger');
+} catch (e) {
     console.log(e);
     var logger = console;
 }
@@ -25,7 +25,7 @@ integrifyAuth.loginSaml = function loginSaml(user, instanceAuthConf, callback) {
         username: instanceAuthConf.service_user
     }
     var keyMap = instanceAuthConf.fieldMap;
-    integrifyToken.getTokenFromJWT(options, function (err, tokenObj) {
+    integrifyToken.getTokenFromJWT(options, function(err, tokenObj) {
 
         if (err) {
             logger.error(err, "integrify-saml");
@@ -42,11 +42,11 @@ integrifyAuth.loginSaml = function loginSaml(user, instanceAuthConf, callback) {
 
         logger.info("Checking user in Integrify DB", "integrify-saml");
 
-        let tempOAuthHeader =  {Oauth: querystring.stringify(tokenObj)};
+        let tempOAuthHeader = { Oauth: querystring.stringify(tokenObj) };
         request.get({
             url: userUrl,
             headers: tempOAuthHeader
-        }, function (err, resp, users) {
+        }, function(err, resp, users) {
             if (err) return callback(err);
             users = JSON.parse(users);
             //console.log(users);
@@ -57,7 +57,7 @@ integrifyAuth.loginSaml = function loginSaml(user, instanceAuthConf, callback) {
                 logger.info("User found", existingUser, "integrify-saml");
             }
 
-            var mapKeys = R.keys(R.omit(['Defaults'],keyMap));
+            var mapKeys = R.keys(R.omit(['Defaults'], keyMap));
 
             logger.info("Mapping SAML Response values to user properties", "integrify-saml");
             var mapIt = function(x) { thisUser[x] = user[keyMap[x]] || keyMap.Defaults[x]; };
@@ -86,29 +86,30 @@ integrifyAuth.loginSaml = function loginSaml(user, instanceAuthConf, callback) {
                 url: saveUserUrl,
                 json: thisUser,
                 headers: tempOAuthHeader
-            }, function (err, resp, save) {
+            }, function(err, resp, save) {
                 if (err) {
                     logger.error("Error saving user", err, "integrify-saml");
                     return callback(err);
                 }
 
-                logger.info("Result of saving user" + save.toString(),  "integrify-saml");
+                logger.info("Result of saving user" + save.toString(), "integrify-saml");
 
                 //activate the user's original token by calling the impersonate api with request-token=true in the querystring.
-                imepersonateURL = url.resolve(instanceAuthConf.integrify_base_url, "access/impersonate?key=" + instanceAuthConf.consumer_key + "&user=" + thisUser.UserName);
+                impersonateURL = url.resolve(instanceAuthConf.integrify_base_url, "access/impersonate?key=" + instanceAuthConf.consumer_key + "&user=" + thisUser.UserName);
 
                 //the below code could be used to automatically expire the token in a certain timeframe
                 //options = {key: instanceAuthConf.consumer_key,secret:instanceAuthConf.consumer_secret,"url":instanceAuthConf.integrify_base_url, username:thisUser.UserName, expiresInMinutes:20}
                 //integrifyToken.getTokenFromJWT(options, function(err,tokenObj){
 
-                // if (instanceAuthConf.tokenExpiresInMinutes) {
-                //
-                //     var d = new Date();
-                //     d.setMinutes(d.getMinutes() + instanceAuthConf.tokenExpiresInMinutes);
-                //
-                //    imepersonateURL = imepersonateURL + "&expires=" +  (d.getTime()/1000.00);
-                // }
-                request(imepersonateURL, function (err, resp, tokenObj) {
+                if (instanceAuthConf.tokenExpiresInMinutes) {
+
+                    var d = new Date();
+                    d.setMinutes(d.getMinutes() + instanceAuthConf.tokenExpiresInMinutes);
+
+                    impersonateURL = impersonateURL + "&expires=" + (d.getTime() / 1000.00);
+                }
+
+                request(impersonateURL, function(err, resp, tokenObj) {
                     if (!err) {
 
                         tokenObj = JSON.parse(tokenObj);
