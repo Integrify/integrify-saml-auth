@@ -75,7 +75,7 @@ app.get('/:appkey/logout', function(req, res) {
     samlStrategy.logout(req, function(err, redirectUrl) {
         if (err) { return next(err); }
         if (!redirectUrl) { return res.status(500).send(err); }
-
+        res.clearCookie('NameID');
         res.redirect(redirectUrl)
     });
 });
