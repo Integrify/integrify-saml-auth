@@ -41,7 +41,9 @@ app.use(samls.passport.initialize());
 app.get('/:appkey/metadata', function (req, res) {
 
     var strategy = samls.passport._strategies['saml-' + req.params.appkey];
-    var metaData = strategy.generateServiceProviderMetadata()
+    // v5 signature: generateServiceProviderMetadata(decryptionCert, signingCert).
+    // We embed no SP certs in the metadata (same as before), so pass null/null.
+    var metaData = strategy.generateServiceProviderMetadata(null, null)
 
     res.type('text/xml')
     res.send(metaData);
