@@ -4,13 +4,22 @@ var config = {
 
             entryPoint: 'http://localhost:8080/simplesaml/saml2/idp/SSOService.php',
             issuer: "integrify-saml-client",
-            protocol: "http://",
-            cert: "idp.crt",
-            privateCert: "integrify.pem",
+            // v5: `cert` renamed to `idpCert` (IdP signing cert); `privateCert`
+            // renamed to `privateKey` (our SP private key). `protocol`/`path`/`host`
+            // were removed — use the absolute `callbackUrl` below.
+            idpCert: "idp.crt",
+            privateKey: "integrify.pem",
+            // v5: `audience` is validated; defaults to `issuer`. Set explicitly to the
+            // SP entityID the IdP expects, or set to false to disable the check.
+            audience: "integrify-saml-client",
             acceptedClockSkewMs: -1,
             // authnContext: 'urn:oasis:names:tc:SAML:2.0:ac:classes:Password<',
             identifierFormat: "urn:oasis:names:tc:SAML:2.0:nameid-format:transient",
             signatureAlgorithm: 'sha256',
+            // v5 secure defaults (both true). Flip to false ONLY if your IdP does not
+            // sign the assertion / response — verify against the live IdP first.
+            wantAssertionsSigned: true,
+            wantAuthnResponseSigned: true,
             loggerType: "dev",
             callbackUrl: "http://localhost:3001/samlauth/integrifyinstance/login/callback",
             forceAuthn: false,

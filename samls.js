@@ -1,7 +1,7 @@
 /**
  * Created by trusky on 9/21/15.
  */
-var SamlStrategy = require('passport-saml').Strategy
+var SamlStrategy = require('@node-saml/passport-saml').Strategy
 var fs = require ("fs")
 var path = require("path")
 var R  = require("ramda")
@@ -16,36 +16,36 @@ var Samls = function samls() {
 
         var loadStrategy = function (appkey) {
             var thisConfig = config[appkey];
-            if (thisConfig.samlStrategy.cert) {
+            // v5: `cert` was renamed to `idpCert` (the IdP's signing certificate).
+            if (thisConfig.samlStrategy.idpCert) {
                 try {
-                    thisConfig.samlStrategy.cert = fs.readFileSync(path.join(__dirname, thisConfig.samlStrategy.cert), 'utf-8')
-
-
-
+                    thisConfig.samlStrategy.idpCert = fs.readFileSync(path.join(__dirname, thisConfig.samlStrategy.idpCert), 'utf-8')
                 }
                 catch (e) {
                     console.error(e)
                 }
 
             }
-            if (thisConfig.samlStrategy.privateCert) {
+            // v5: `privateCert` was renamed to `privateKey` (our SP private key for signing requests).
+            if (thisConfig.samlStrategy.privateKey) {
                 try {
-                    thisConfig.samlStrategy.privateCert = fs.readFileSync(path.join(__dirname, thisConfig.samlStrategy.privateCert), 'utf-8')
-
-
-
+                    thisConfig.samlStrategy.privateKey = fs.readFileSync(path.join(__dirname, thisConfig.samlStrategy.privateKey), 'utf-8')
                 }
                 catch (e) {
                     console.error(e)
                 }
 
             }
+            // v5: the Strategy constructor takes TWO verify callbacks — one for
+            // sign-on and a (now required) one for logout. Both simply pass the
+            // profile through, preserving the prior single-callback behavior.
             var samlStrat = new SamlStrategy(
                 thisConfig.samlStrategy,
                 function (profile, done) {
-
                     return done(null, profile);
-
+                },
+                function (profile, done) {
+                    return done(null, profile);
                 });
             samlStrat.name = 'saml-' + appkey;
 
