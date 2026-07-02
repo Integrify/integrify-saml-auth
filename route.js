@@ -52,7 +52,9 @@ app.get("/:appkey/", function(req,res){
     var integrifyUrl = req.query.r || req.query.redirect;
     res.cookie('integrifyUrl', integrifyUrl, {maxAge: exp});
 
-    res.redirect("/samlauth/" + req.params.appkey + "/login")
+    //res.redirect("/samlauth/" + req.params.appkey + "/login")
+    const redirectUrl = "/samlauth/" + req.params.appkey + "/login"; 
+    res.send(`<script>window.location.href = "${redirectUrl}";</script>`);
 
 })
 
@@ -127,7 +129,9 @@ app.post('/:appkey/login/callback', function(req, res, next) {
 
                 var redirectUrl = url.format(redirectrUrlObj);
 
-                return res.redirect(redirectUrl);
+                //return res.redirect(redirectUrl);
+		res.writeHead(302, { Location: redirectUrl }); 
+		res.end();
             } else {
                 return res.status(500).send("Your login took too long to process");
 
